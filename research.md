@@ -65,7 +65,6 @@
 - **absolute node id**：对 LLM 推理友好；但需要中心化的 uid 分配器，UUID 生成方式不够鲁棒。
 - **并行策略**：并行时划分 relative prefix，单个 agent 内部使用 absolute id——引用与分配都很直接，也不会引入中心锁。
 - **节点引用（默认方案）**：对 LLM 暴露**层级语法路径**（如 `mod[0]/impl[1]/fn[2]`），内部映射到稳定 ID；并发以前缀分区，并对重叠写做冲突检测。
-- **reactive programming（后续阶段）**：某个 node 变更后，按相关 edge 触发 review/refactor；edge 通过染色连接成 DAG。借助 `pub / priv / protected / internal` 让 DAG 更接近一棵 tree（逻辑更简单）；回边问题交由 structure-editor 处理。此部分风险最高，暂不纳入首期闭环。
 
 ### 1.6 future work
 
