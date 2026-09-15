@@ -27,14 +27,21 @@
 - **Outlines / 基于 FSM 的引导生成**（Willard & Louf, arXiv:2307.09702）——把生成"重新表述为有限状态机状态之间的转移"，通过索引模型词表实现正则与上下文无关语法引导，"保证生成文本的结构"。https://arxiv.org/abs/2307.09702
 - **Monitor-guided decoding（MGD）**（Agrawal et al., arXiv:2306.10763）——用静态分析作为监视器、结合仓库上下文引导解码，提升编译率与下一标识符匹配率；报告 SantaCoder-1.1B 在这两项指标上可胜过 text-davinci-003。https://arxiv.org/abs/2306.10763
 
-## 4. 程序修复
+## 4. 静态上下文与语言服务（IDE 集成）
+
+- **Statically Contextualizing Large Language Models with Typed Holes**（Blinn et al., arXiv:2409.00921，OOPSLA 2024）——主张"AI 也需要 IDE"：把 LLM 代码生成接入 Hazel 实时程序草图环境，由 **Hazel Language Server 识别待填充洞（hole）的类型与类型上下文**（即便存在错误），从而用**不在光标附近、甚至不在同一文件**、但与目标语义相关的全库上下文来提示；生成结果再通过与语言服务器的多轮对话迭代精化。作者发布 **MVUBench**（MVU Web 应用基准，挑战点在应用专有数据结构），发现**用类型定义做上下文尤其有效**，并把方法移植到 TypeScript 以验证在资源丰富语言上的适用性。最后提出 **ChatLSP**——LSP 的一个保守扩展，供语言服务器把这类静态上下文暴露给不同设计路线的 AI 补全系统。https://arxiv.org/abs/2409.00921
+
+---
+
+## 5. 程序修复
 
 - **CURE**（Jiang et al., arXiv:2103.00073）——基于 NMT 的自动程序修复，含三部分：PL 模型预训练、"一种新的代码感知搜索策略（专注于可编译补丁以及与缺陷代码长度相近的补丁）"、子词分词；报告修复 57 个 Defects4J 与 26 个 QuixBugs 缺陷。https://arxiv.org/abs/2103.00073
 
 ---
 
-## 5. 由这些工作提炼的设计问题（供我们参考）
+## 6. 由这些工作提炼的设计问题（供我们参考）
 
 - **表示层**：AST 路径（code2vec）、程序图（GNN）、树到树（translation）、FIM（局部填充）代表四种"结构如何进入模型"的路线。
 - **编辑层**：CoditT5 / Learning to Represent Edits 把"编辑"本身作为可学习对象，对应 Aider 的"编辑格式"思路——只是前者学表示、后者定协议。
 - **约束层**：PICARD（语法）、Synchromesh（语义/类型/作用域）、Grammar Prompting（语法作为输入）、Outlines（FSM 保证结构）、MGD（静态分析全局上下文）——约束越强，生成越可用，但需权衡灵活性与开销。
+- **上下文层**：typed holes / ChatLSP（类型与绑定结构经语言服务器暴露）说明"把语义局部、跨文件的静态上下文喂给模型"本身是一类独立手段——这正是结构化编辑器的天然能力。

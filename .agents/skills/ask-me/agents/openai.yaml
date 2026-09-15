@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ask Me"
+  short_description: "Force decisions from the conversation alone"
+policy:
+  allow_implicit_invocation: false
